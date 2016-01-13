@@ -1,0 +1,21 @@
+# test python
+# Deploy to Stage Branch
+# test api call from swagger and expected examples
+
+machine:
+  python:
+    version: 2.7.6
+  environment:
+    JAVA_HOME: /usr/lib/jvm/java-8-openjdk-amd64
+    PATH: ${JAVA_HOME}/bin:${PATH}
+    RELEASE_ID: $(echo ${CIRCLE_BRANCH} |sed 's/\//-/g')
+
+general:
+  artifacts:
+    - target/aws-apigateway-importer.jar
+
+test:
+  override:
+    - mvn -V -q assembly:assembly
+  post:
+    - cp target/aws-apigateway-*-jar-with-dependencies.jar target/aws-apigateway-importer.jar
